@@ -8,14 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var showEvenAlert:Bool = false
+    @State private var num = 2
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            TextField("Enter number: ", value: $num, format:.number)
+                .textFieldStyle(.roundedBorder)
+                .frame(maxWidth: 150)
+            Button("Show Alert if number is even") {
+                showEvenAlert = num % 2 == 0
+            }
+            .alert(isPresented: $showEvenAlert, content: {
+                Alert(title: Text("Even"), message: Text("\(num) is even"), dismissButton: .cancel() )
+            })
         }
-        .padding()
     }
 }
 
