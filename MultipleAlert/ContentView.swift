@@ -7,29 +7,45 @@
 
 import SwiftUI
 
+enum AlertContent {
+    case even(num:Int), odd(num:Int)
+    
+    var title:String {
+        switch self {
+        case .even:
+            "Even"
+        case .odd:
+            "Odd"
+        }
+    }
+    
+    var message:String {
+        switch self {
+        case .even(let num):
+            "\(num) is even"
+        case .odd(let num):
+            "\(num) is odd"
+        }
+    }
+}
 
 struct ContentView: View {
-    @State private var showEvenAlert:Bool = false
-    @State private var showOddAlert:Bool = false
+    @State private var showAlert:Bool = false
     @State private var num = 2
+    @State private var alertContent:AlertContent = .even(num: 2)
     
     var body: some View {
         VStack {
             TextField("Enter number: ", value: $num, format:.number)
                 .textFieldStyle(.roundedBorder)
                 .frame(maxWidth: 150)
-                .alert(isPresented: $showOddAlert, content: {
-                    Alert(title: Text("Odd"), message: Text("\(num) is odd"), dismissButton: .cancel() )
-                })
-            Button("Show Alert if number is even") {
-                showEvenAlert = num % 2 == 0
-                showOddAlert = num % 2 == 1
+            Button("Show Alert if number is odd or even") {
+                alertContent = (num % 2 == 0) ? .even(num: num) : .odd(num: num)
+                showAlert = true
             }
-            .alert(isPresented: $showEvenAlert, content: {
-                Alert(title: Text("Even"), message: Text("\(num) is even"), dismissButton: .cancel() )
+            .alert(isPresented: $showAlert, content: {
+                Alert(title: Text(alertContent.title), message: Text(alertContent.message), dismissButton: .cancel() )
             })
-            
-            
         }
     }
 }
